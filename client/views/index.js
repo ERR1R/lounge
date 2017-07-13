@@ -28,6 +28,7 @@ module.exports = {
 	},
 
 	chan: require("./chan.tpl"),
+	changelog: require("./changelog.tpl"),
 	chat: require("./chat.tpl"),
 	contextmenu_divider: require("./contextmenu_divider.tpl"),
 	contextmenu_item: require("./contextmenu_item.tpl"),

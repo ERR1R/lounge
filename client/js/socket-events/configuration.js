@@ -65,4 +65,18 @@ socket.on("configuration", function(data) {
 			// Store the "previous" value, for next time
 			$(this).data("lastvalue", nick);
 		});
+
+	$("#view-changelog").on("click", function() {
+		$("#windows > .active")
+			.removeClass("active")
+			.find(".chat")
+			.unsticky();
+
+		$("#changelog")
+			.addClass("active");
+
+		return false;
+	}).one("click", function() {
+		socket.emit("changelog");
+	});
 });

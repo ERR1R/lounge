@@ -26,7 +26,8 @@
     "test:mocha": "nyc --nycrc-path=test/.nycrc-mocha mocha --colors",
     "test:mocha-webpack": "nyc --nycrc-path=test/.nycrc-mocha-webpack mocha-webpack --colors --opts=test/mocha-webpack.opts",
     "lint:js": "eslint . --report-unused-disable-directives --color",
-    "lint:css": "stylelint --color --report-needless-disables=error \"client/**/*.css\""
+    "lint:css": "stylelint --color --report-needless-disables=error \"client/**/*.css\"",
+    "start:mocha": "webpack-dev-server --config=webpack.config-browser.js"
   },
   "keywords": [
     "lounge",
@@ -81,6 +82,7 @@
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
     "mocha": "4.0.1",
+    "mocha-loader": "1.1.1",
     "mocha-webpack": "1.0.1",
     "mousetrap": "1.6.1",
     "npm-run-all": "4.1.2",
@@ -89,6 +91,7 @@
     "stylelint": "8.3.1",
     "stylelint-config-standard": "18.0.0",
     "textcomplete": "0.14.5",
-    "webpack": "3.10.0"
+    "webpack": "3.10.0",
+    "webpack-dev-server": "2.9.7"
   }
 }

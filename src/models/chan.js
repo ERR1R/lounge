@@ -2,6 +2,7 @@
 
 var _ = require("lodash");
 var Helper = require("../helper");
+const Msg = require("./msg");
 const User = require("./user");
 const userLog = require("../userLog");
 const storage = require("../plugins/storage");
@@ -57,11 +58,7 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 		return;
 	}
 
-	this.messages.push(msg);
-
-	if (client.config.log === true) {
-		writeUserLog.call(this, client, msg);
-	}
+	this.writeUserLog(client, msg);
 
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
 		const deleted = this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
@@ -143,11 +140,29 @@ Chan.prototype.toJSON = function() {
 	return clone;
 };
 
-function writeUserLog(client, msg) {
+Chan.prototype.writeUserLog = function(client, msg) {
+	this.messages.push(msg);
+
 	const target = client.find(this.id);
 
 	if (!target) {
 		return false;
+	}
+
+	if ((this.type === Chan.Type.CHANNEL || this.type === Chan.Type.QUERY)
+		&& (msg.type === Msg.Type.MESSAGE || msg.type === Msg.Type.ACTION)) {
+		client.manager.messageStorage.index(
+			target.network.uuid,
+			this.name,
+			Math.floor(msg.time.getTime() / 1000),
+			msg.type,
+			msg.from,
+			msg.text
+		);
+	}
+
+	if (!client.config.log) {
+		return;
 	}
 
 	userLog.write(
@@ -156,4 +171,4 @@ function writeUserLog(client, msg) {
 		this.type === Chan.Type.LOBBY ? target.network.host : this.name,
 		msg
 	);
-}
+};

@@ -10,6 +10,7 @@ describe("Network", function() {
 	describe("#export()", function() {
 		it("should produce an valid object", function() {
 			var network = new Network({
+				uuid: "hello world",
 				awayMessage: "I am away",
 				name: "networkName",
 				channels: [
@@ -24,6 +25,7 @@ describe("Network", function() {
 			network.setNick("chillin`");
 
 			expect(network.export()).to.deep.equal({
+				uuid: "hello world",
 				awayMessage: "I am away",
 				name: "networkName",
 				host: "",
@@ -43,6 +45,15 @@ describe("Network", function() {
 					{name: "&secure", key: "bar"},
 				],
 			});
+		});
+
+		it("should generate uuid (v4) for each network", function() {
+			const network1 = new Network();
+			const network2 = new Network();
+
+			expect(network1.uuid).to.have.lengthOf(36);
+			expect(network2.uuid).to.have.lengthOf(36);
+			expect(network1.uuid).to.not.equal(network2.uuid);
 		});
 
 		it("lobby should be at the top", function() {

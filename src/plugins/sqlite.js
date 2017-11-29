@@ -3,6 +3,7 @@
 const path = require("path");
 const sqlite3 = require("sqlite3");
 const Helper = require("../helper");
+const Msg = require("../models/msg");
 
 let schema = [
 	"CREATE TABLE IF NOT EXISTS logs (network TEXT, channel TEXT, time INTEGER, type TEXT, nick TEXT, text TEXT)",
@@ -29,6 +30,28 @@ class MessageStorage {
 			this.database.run(
 				"INSERT INTO logs(network, channel, time, type, nick, text) VALUES(?, ?, ?, ?, ?, ?)",
 				network, channel, time, type, nick, text
+			);
+		});
+	}
+
+	getMessages(network, channel, offset = 0) {
+		return new Promise((resolve, reject) => {
+			this.database.all(
+				"SELECT time, type, nick, text FROM logs WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT 100 OFFSET ?",
+				[network, channel, offset],
+				(err, rows) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(rows.map((msg) => new Msg({
+							type: msg.type,
+							time: msg.time * 1000,
+							from: msg.nick,
+							text: msg.text,
+							self: network.nick === msg.nick,
+						})));
+					}
+				}
 			);
 		});
 	}

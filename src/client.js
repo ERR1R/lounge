@@ -278,6 +278,8 @@ Client.prototype.connect = function(args) {
 	network.irc.connect();
 
 	client.save();
+
+	channels.forEach((channel) => channel.loadMessages(client, network));
 };
 
 Client.prototype.generateToken = function(callback) {

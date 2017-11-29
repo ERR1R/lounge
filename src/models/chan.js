@@ -172,3 +172,26 @@ Chan.prototype.writeUserLog = function(client, msg) {
 		msg
 	);
 };
+
+Chan.prototype.loadMessages = function(client, network, offset = 0) {
+	client.manager.messageStorage
+		.getMessages(network.uuid, this.name, offset)
+		.then((messages) => {
+			if (messages.length === 0) {
+				return;
+			}
+
+			// TODO: this isn't best solution
+			this.messages = messages.concat(this.messages);
+
+			if (!this.firstUnread) {
+				this.firstUnread = messages[messages.length - 1].id;
+			}
+
+			client.emit("more", {
+				chan: this.id,
+				messages: messages,
+			});
+		})
+		.catch((err) => log.error(`Failed to load messages: ${err}`));
+};

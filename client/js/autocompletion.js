@@ -4,6 +4,7 @@ const $ = require("jquery");
 const fuzzy = require("fuzzy");
 const Mousetrap = require("mousetrap");
 const emojiMap = require("./libs/simplemap.json");
+const options = require("./options");
 const constants = require("./constants");
 
 const input = $("#input");
@@ -57,7 +58,18 @@ const nicksStrategy = {
 		return string;
 	},
 	replace([, original]) {
-		return original;
+		// If no postfix specified, return autocompleted nick as-is
+		if (!options.nickPostfix) {
+			return original;
+		}
+
+		// If there is whitespace in the input already, append space to nick
+		if (/\s/.test(input.val())) {
+			return original + " ";
+		}
+
+		// If nick is first in the input, append specified postfix
+		return original + options.nickPostfix;
 	},
 	index: 1,
 };

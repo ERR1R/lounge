@@ -5,6 +5,7 @@ global.log = {
 	warn: () => {},
 	info: () => {},
 	debug: () => {},
+	raw: () => {},
 };
 
 var home = require("path").join(__dirname, ".lounge");

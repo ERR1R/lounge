@@ -1,5 +1,6 @@
 "use strict";
 
+const _ = require("lodash");
 const colors = require("colors/safe");
 const fs = require("fs");
 const fsextra = require("fs-extra");
@@ -10,13 +11,20 @@ const Utils = require("./utils");
 
 program
 	.command("start")
+	.option(
+		"-c, --config <key=value>",
+		"override entries of the configuration file, must be specified for each entry that needs to be overriden",
+		Utils.parseConfigOptions
+	)
 	.description("Start the server")
 	.on("--help", Utils.extraHelp)
-	.action(function() {
+	.action(function({config}) {
 		initalizeConfig();
 
-		const server = require("../server");
+		// Merge config options passed as CLI argument into the main config
+		_.merge(Helper.config, config);
 
+		const server = require("../server");
 		server();
 	});
 

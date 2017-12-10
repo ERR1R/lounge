@@ -82,7 +82,7 @@
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
     "mocha": "4.0.1",
-    "mocha-loader": "1.1.1",
+    "mocha-loader": "astorije/mocha-loader#patch-1",
     "mocha-webpack": "1.0.1",
     "mousetrap": "1.6.1",
     "npm-run-all": "4.1.2",
